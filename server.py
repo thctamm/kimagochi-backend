@@ -96,7 +96,7 @@ def create():
 
 @app.route('/status/<int:kimId>')
 def status(kimId):
-    print("checking id {}".format(kimId))
+    print(leaders)
     if kimId in leaders:
         kim = leaders[kimId]
         return jsonify(kim.getStatus())
