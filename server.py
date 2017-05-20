@@ -41,12 +41,11 @@ def mentionsKim(text):
 
 
 def updater(gLock, token, lastTweetId, gLeaders):
-    '''if token == 0 or token == '':
+    if token == 0 or token == '':
         twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
         token = twitter.obtain_access_token() 
-    twitter = Twython(APP_KEY, access_token=token)'''
+    twitter = Twython(APP_KEY, access_token=token)
     while True:
-        '''
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
             if resp['status']['id'] != lastTweetId:
@@ -57,7 +56,6 @@ def updater(gLock, token, lastTweetId, gLeaders):
                     elif sentiment < 0.4:
                         curKim.addNegativeTweet()
                 lastTweetId = resp['status']['id']
-                '''
         gLock.acquire()
         for kimId in gLeaders:
             curKim = gLeaders[kimId]
@@ -85,7 +83,7 @@ def init():
         token = ''
         lastTweetId = 0
     Thread(target = updater, args=(lock, token, lastTweetId, leaders)).start()
-    app.run()
+    app.run(port='80')
 
 
 @app.route('/create')
