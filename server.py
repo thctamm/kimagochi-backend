@@ -42,7 +42,6 @@ def mentionsKim(text):
 
 
 def updater(gLock):
-    global twitter, leaders, token, lastTweetId
     while True:
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
