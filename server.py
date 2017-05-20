@@ -10,6 +10,7 @@ import requests
 from threading import Thread, Lock, Timer
 from twython import Twython
 from flask import Flask, jsonify
+from flask_cors import CORS, cross_origin
 from kim import Kim
 
 SLEEP_TIME = 5
@@ -24,6 +25,7 @@ leaders = {}
 lastTweetId = 0
 token = 0
 random.seed()
+CORS(app)
 
 def getSentiment(text):
     inp = {'documents': [{'language': 'en', 'id': '1', 'text': text}]}
