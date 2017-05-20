@@ -17,14 +17,12 @@ SLEEP_TIME = 10
 twitter_handle = 'realDonaldTrump'
 statusFile = 'status.pickle'
 app = Flask('kimagochi')
-twitter = None
 APP_KEY = os.environ["TWITTER_KEY"]
 APP_SECRET = os.environ["TWITTER_SECRET"]
 MS_KEY = os.environ["MS_KEY"]
 random.seed()
 CORS(app)
 lock = Lock()
-leaders = {}
 token = ''
 lastTweetId = 0
 
@@ -41,8 +39,11 @@ def mentionsKim(text):
     return False
 
 
-def updater(gLock):
-    global lastTweetId
+def updater(gLock, token, lastTweetId, leaders):
+    if token == 0 or token == '':
+        twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
+        token = twitter.obtain_access_token() 
+    twitter = Twython(APP_KEY, access_token=token)
     while True:
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
@@ -70,7 +71,6 @@ def updater(gLock):
 
 
 def init():
-    global leaders, twitter, token, lastTweetId
     if os.path.isfile(statusFile):
         with open(statusFile, 'rb') as handle:
             data = pickle.load(handle)
@@ -81,17 +81,12 @@ def init():
         leaders = {}
         token = ''
         lastTweetId = 0
-    if token == 0 or token == None:
-        twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
-        token = twitter.obtain_access_token() 
-    twitter = Twython(APP_KEY, access_token=token)
-    Thread(target = updater, args=lock).start()
+    Thread(target = updater, args=(lock, token, lastTweetId, leaders)).start()
     app.run()
 
 
 @app.route('/create')
 def create():
-    global leaders
     newId = random.randint(0, 999999)
     while newId in leaders:
         newId = random.randint(0, 999999)
