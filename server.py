@@ -17,9 +17,9 @@ SLEEP_TIME = 10
 twitter_handle = 'realDonaldTrump'
 statusFile = 'status.pickle'
 app = Flask('kimagochi')
-APP_KEY = os.environ["TWITTER_KEY"]
-APP_SECRET = os.environ["TWITTER_SECRET"]
-MS_KEY = os.environ["MS_KEY"]
+#APP_KEY = os.environ["TWITTER_KEY"]
+#APP_SECRET = os.environ["TWITTER_SECRET"]
+#MS_KEY = os.environ["MS_KEY"]
 random.seed()
 CORS(app)
 lock = Lock()
@@ -41,11 +41,12 @@ def mentionsKim(text):
 
 
 def updater(gLock, token, lastTweetId, gLeaders):
-    if token == 0 or token == '':
+    '''if token == 0 or token == '':
         twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
         token = twitter.obtain_access_token() 
-    twitter = Twython(APP_KEY, access_token=token)
+    twitter = Twython(APP_KEY, access_token=token)'''
     while True:
+        '''
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
             if resp['status']['id'] != lastTweetId:
@@ -56,6 +57,7 @@ def updater(gLock, token, lastTweetId, gLeaders):
                     elif sentiment < 0.4:
                         curKim.addNegativeTweet()
                 lastTweetId = resp['status']['id']
+                '''
         gLock.acquire()
         for kimId in gLeaders:
             curKim = gLeaders[kimId]
