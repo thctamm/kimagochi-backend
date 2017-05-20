@@ -40,7 +40,8 @@ def mentionsKim(text):
     return False
 
 
-def updater(gLock, token, lastTweetId, gLeaders):
+def updater(gLock, token, lastTweetId):
+    global leaders
     if token == 0 or token == '':
         twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
         token = twitter.obtain_access_token() 
@@ -57,10 +58,12 @@ def updater(gLock, token, lastTweetId, gLeaders):
                         curKim.addNegativeTweet()
                 lastTweetId = resp['status']['id']
         gLock.acquire()
-        for kimId in gLeaders:
-            gLeaders[kimId].nextTick()
+        for kimId in leaders:
+            sys.stdout.write('{}'.format(kimId))
+            leaders[kimId].nextTick()
+            sys.stdout.write('{}'.format(leaders[kimId].hunger))
         # save data
-        dat = {'leaders': gLeaders,
+        dat = {'leaders': leaders,
                'token': token,
                'lastTweetId': lastTweetId}
         with open(statusFile, 'wb') as handle:
@@ -71,6 +74,7 @@ def updater(gLock, token, lastTweetId, gLeaders):
 
 
 def init():
+    global leaders
     if os.path.isfile(statusFile):
         with open(statusFile, 'rb') as handle:
             data = pickle.load(handle)
@@ -81,12 +85,13 @@ def init():
         leaders = {}
         token = ''
         lastTweetId = 0
-    Thread(target = updater, args=(lock, token, lastTweetId, leaders)).start()
+    Thread(target = updater, args=(lock, token, lastTweetId)).start()
     app.run(host='0.0.0.0', port = os.environ["PORT"])
 
 
 @app.route('/create')
 def create():
+    global leaders
     newId = random.randint(0, 999999)
     while newId in leaders:
         newId = random.randint(0, 999999)
@@ -107,6 +112,7 @@ def status(kimId):
 
 @app.route('/rockets/<int:kimId>')
 def rockets(kimId):
+    global leaders
     if kimId in leaders:
         kim = leaders[kimId]
         if kim.playWithRockets() == 0:
@@ -116,6 +122,7 @@ def rockets(kimId):
 
 @app.route('/parade/<int:kimId>')
 def parade(kimId):
+    global leaders
     if kimId in leaders:
         kim = leaders[kimId]
         if kim.holdParade() == 0:
@@ -126,6 +133,7 @@ def parade(kimId):
 
 @app.route('/eat/<int:kimId>')
 def eat(kimId):
+    global leaders
     if kimId in leaders:
         kim = leaders[kimId]
         kim.eat()
@@ -134,6 +142,7 @@ def eat(kimId):
 
 @app.route('/factory/<int:kimId>')
 def factory(kimId):
+    global leaders
     if kimId in leaders:
         kim = leaders[kimId]
         kim.visitFactory()
