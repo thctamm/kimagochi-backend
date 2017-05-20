@@ -21,9 +21,6 @@ twitter = None
 APP_KEY = os.environ["TWITTER_KEY"]
 APP_SECRET = os.environ["TWITTER_SECRET"]
 MS_KEY = os.environ["MS_KEY"]
-leaders = {}
-lastTweetId = 0
-token = 0
 random.seed()
 CORS(app)
 lock = Lock()
@@ -53,10 +50,8 @@ def updater(gLock):
                     elif sentiment < 0.4:
                         curKim.addNegativeTweet()
                 lastTweetId = resp['status']['id']
-        print("leaders: ")
         gLock.acquire()
         for kimId in leaders:
-            print(kimId)
             curKim = leaders[kimId]
             curKim.nextTick()
         # save data
