@@ -119,7 +119,7 @@ class Kim(object):
         self.checkBounds()
 
     def visitFactory(self):
-        self.boredom += conf['factoryBoost']
+        self.boredom -= conf['factoryBoost']
         self.checkBounds()
 
     def playWithRockets(self):
