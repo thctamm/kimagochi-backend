@@ -17,9 +17,9 @@ SLEEP_TIME = 10
 twitter_handle = 'realDonaldTrump'
 statusFile = 'status.pickle'
 app = Flask('kimagochi')
-#APP_KEY = os.environ["TWITTER_KEY"]
-#APP_SECRET = os.environ["TWITTER_SECRET"]
-#MS_KEY = os.environ["MS_KEY"]
+APP_KEY = os.environ["TWITTER_KEY"]
+APP_SECRET = os.environ["TWITTER_SECRET"]
+MS_KEY = os.environ["MS_KEY"]
 random.seed()
 CORS(app)
 lock = Lock()
@@ -83,7 +83,8 @@ def init():
         token = ''
         lastTweetId = 0
     Thread(target = updater, args=(lock, token, lastTweetId, leaders)).start()
-    app.run(port='80')
+    port = int(os.environ.get('PORT', 5000))
+    app.run(port=port)
 
 
 @app.route('/create')
