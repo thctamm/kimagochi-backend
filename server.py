@@ -25,6 +25,7 @@ CORS(app)
 lock = Lock()
 token = ''
 lastTweetId = 0
+leaders = {}
 
 def getSentiment(text):
     inp = {'documents': [{'language': 'en', 'id': '1', 'text': text}]}
@@ -39,7 +40,7 @@ def mentionsKim(text):
     return False
 
 
-def updater(gLock, token, lastTweetId, leaders):
+def updater(gLock, token, lastTweetId, gLeaders):
     if token == 0 or token == '':
         twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
         token = twitter.obtain_access_token() 
@@ -56,11 +57,11 @@ def updater(gLock, token, lastTweetId, leaders):
                         curKim.addNegativeTweet()
                 lastTweetId = resp['status']['id']
         gLock.acquire()
-        for kimId in leaders:
-            curKim = leaders[kimId]
+        for kimId in gLeaders:
+            curKim = gLeaders[kimId]
             curKim.nextTick()
         # save data
-        dat = {'leaders': leaders,
+        dat = {'leaders': gLeaders,
                'token': token,
                'lastTweetId': lastTweetId}
         with open(statusFile, 'wb') as handle:
