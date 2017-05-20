@@ -24,6 +24,9 @@ MS_KEY = os.environ["MS_KEY"]
 random.seed()
 CORS(app)
 lock = Lock()
+leaders = {}
+token = ''
+lastTweetId = 0
 
 def getSentiment(text):
     inp = {'documents': [{'language': 'en', 'id': '1', 'text': text}]}
@@ -39,6 +42,7 @@ def mentionsKim(text):
 
 
 def updater(gLock):
+    global lastTweetId
     while True:
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
@@ -87,6 +91,7 @@ def init():
 
 @app.route('/create')
 def create():
+    global leaders
     newId = random.randint(0, 999999)
     while newId in leaders:
         newId = random.randint(0, 999999)
