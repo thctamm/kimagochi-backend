@@ -102,11 +102,11 @@ class Kim(object):
             self.hunger += 1
         if self.ticks % conf['boredomTicks'] == 0 and self.boredom < 100:
             self.boredom += 1
-        if self.boredom == 100 and self.ticks % conf['penaltyTicks']:
+        if self.boredom == 100 and self.ticks % conf['penaltyTicks'] == 0:
             self.happiness -= conf['boredomPenalty']
-        if self.hunger == 100 and self.ticks % conf['penaltyTicks']:
+        if self.hunger == 100 and self.ticks % conf['penaltyTicks'] == 0:
             self.happiness -= conf['hungerPenalty']
-        if self.prestige == 0 and self.ticks % conf['penaltyTicks']:
+        if self.prestige == 0 and self.ticks % conf['penaltyTicks'] == 0:
             self.happiness -= conf['prestigePenalty']
 
         if random.randint(1, conf['eventProb']) == 1:
