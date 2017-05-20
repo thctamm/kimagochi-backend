@@ -13,7 +13,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
 from kim import Kim
 
-SLEEP_TIME = 10
+SLEEP_TIME = 1
 twitter_handle = 'realDonaldTrump'
 statusFile = 'status.pickle'
 app = Flask('kimagochi')
@@ -58,8 +58,7 @@ def updater(gLock, token, lastTweetId, gLeaders):
                 lastTweetId = resp['status']['id']
         gLock.acquire()
         for kimId in gLeaders:
-            curKim = gLeaders[kimId]
-            curKim.nextTick()
+            gLeaders[kimId].nextTick()
         # save data
         dat = {'leaders': gLeaders,
                'token': token,
