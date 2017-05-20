@@ -73,6 +73,10 @@ def init():
             leaders = data['leaders']
             token = data['token']
             lastTweetId = data['lastTweetId']
+    else:
+        leaders = {}
+        token = ''
+        lastTweetId = 0
     if token == 0 or token == None:
         twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
         token = twitter.obtain_access_token() 
