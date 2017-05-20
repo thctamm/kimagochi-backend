@@ -43,7 +43,7 @@ def mentionsKim(text):
 def updater():
     global twitter, leaders, token, lastTweetId
     while True:
-        # TODO:check for tweets
+        print("Updating");
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
             if resp['status']['id'] != lastTweetId:
