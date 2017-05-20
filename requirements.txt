@@ -1,0 +1,5 @@
+twython==3.4.0
+Flask==0.12.2
+gunicorn==19.7.1
+nltk==3.2.3
+requests==2.7.0

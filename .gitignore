@@ -99,3 +99,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+dont_add.txt
+status.pickle
