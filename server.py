@@ -13,7 +13,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
 from kim import Kim
 
-SLEEP_TIME = 5
+SLEEP_TIME = 10
 twitter_handle = 'realDonaldTrump'
 statusFile = 'status.pickle'
 app = Flask('kimagochi')
@@ -26,6 +26,7 @@ lastTweetId = 0
 token = 0
 random.seed()
 CORS(app)
+lock = Lock()
 
 def getSentiment(text):
     inp = {'documents': [{'language': 'en', 'id': '1', 'text': text}]}
@@ -40,10 +41,9 @@ def mentionsKim(text):
     return False
 
 
-def updater():
+def updater(gLock):
     global twitter, leaders, token, lastTweetId
     while True:
-        print("Updating");
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
             if resp['status']['id'] != lastTweetId:
@@ -55,6 +55,7 @@ def updater():
                         curKim.addNegativeTweet()
                 lastTweetId = resp['status']['id']
         print("leaders: ")
+        gLock.acquire()
         for kimId in leaders:
             print(kimId)
             curKim = leaders[kimId]
@@ -65,6 +66,7 @@ def updater():
                'lastTweetId': lastTweetId}
         with open(statusFile, 'wb') as handle:
             pickle.dump(dat, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        gLock.release()
         time.sleep(SLEEP_TIME)
             
 
@@ -81,7 +83,7 @@ def init():
         twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
         token = twitter.obtain_access_token() 
     twitter = Twython(APP_KEY, access_token=token)
-    Thread(target = updater).start()
+    Thread(target = updater, args=lock).start()
     app.run()
 
 
@@ -97,9 +99,12 @@ def create():
 @app.route('/status/<int:kimId>')
 def status(kimId):
     print(leaders)
+    lock.acquire()
     if kimId in leaders:
         kim = leaders[kimId]
+        lock.release()
         return jsonify(kim.getStatus())
+    lock.release()
     return 'bad id'
 
 @app.route('/rockets/<int:kimId>')
