@@ -98,7 +98,7 @@ def create():
 
 @app.route('/status/<int:kimId>')
 def status(kimId):
-    print(leaders)
+    print(hex(id(leaders)))
     lock.acquire()
     if kimId in leaders:
         kim = leaders[kimId]
