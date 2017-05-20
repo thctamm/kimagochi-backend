@@ -83,7 +83,7 @@ def init():
         token = ''
         lastTweetId = 0
     Thread(target = updater, args=(lock, token, lastTweetId, leaders)).start()
-    app.run(port = os.environ["PORT"])
+    app.run(host='0.0.0.0', port = os.environ["PORT"])
 
 
 @app.route('/create')
