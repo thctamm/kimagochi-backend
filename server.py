@@ -126,7 +126,7 @@ def parade(kimId):
     if kimId in leaders:
         kim = leaders[kimId]
         if kim.holdParade() == 0:
-            return jsonify(kim.getStatus())
+            return 'success'
         return 'not enough cash'
         
     return 'bad id'
