@@ -2,9 +2,9 @@ import random
 
 GAMESPEED = 1
 
-conf = {'hungerTicks': 15,
-        'boredomTicks': 30,
-        'penaltyTicks': 5,
+conf = {'hungerTicks': 3,
+        'boredomTicks': 6,
+        'penaltyTicks': 1,
         'paradeCost': 300,
         'paradeBoost': 40,
         'rocketHappinessBoost': 40,
