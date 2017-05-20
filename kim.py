@@ -115,7 +115,7 @@ class Kim(object):
         return 0
 
     def eat(self):
-        self.hunger += conf['eatBoost']
+        self.hunger -= conf['eatBoost']
         self.checkBounds()
 
     def visitFactory(self):
