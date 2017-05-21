@@ -18,7 +18,7 @@ conf = {'hungerTicks': 15,
         'boredomPenalty': 3,
         'hungerPenalty': 2,
         'prestigePenalty': 5,
-        'eventProb': 50,
+        'eventProb': 4,
         'eventLimit': 20}
 
 
