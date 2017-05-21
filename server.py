@@ -73,7 +73,8 @@ def updater(gLock, token, lastTweetId):
                 leaders[kimId].addNegativeTweet()
             leaders[kimId].nextTick()
             if leaders[kimId].happiness < 30 and not leaders[kimId].textSent:
-                twilio.messages.create(body='Your Kim is becoming quite unhappy. Better check in on him.\n\nID: {}'.format(kimId), to=leaders[kimId].number, from_=TWILIO_NUMBER)
+                try:
+                    twilio.messages.create(body='Your Kim is becoming quite unhappy. Better check in on him.\n\nID: {}'.format(kimId), to=leaders[kimId].number, from_=TWILIO_NUMBER)
                 leaders[kimId].textSent = True
                 
         # save data
