@@ -40,7 +40,7 @@ def getSentiment(text):
         return float(resp.json()['documents'][0]['score'])
 
 def mentionsKim(text):
-    if re.search("(north korea|kim jong un|democratic people'*s republic of korea|dprk)", text):
+    if re.search("(north korea|kim jong un|democratic people'*s republic of korea|dprk)", text.lower()):
         return True
     return False
 
