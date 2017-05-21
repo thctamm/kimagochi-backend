@@ -15,7 +15,8 @@ from flask_cors import CORS, cross_origin
 from kim import Kim
 
 SLEEP_TIME = 1
-twitter_handle = 'realDonaldTrump'
+#twitter_handle = 'realDonaldTrump'
+twitter_handle = 'thctamm'
 statusFile = 'status.pickle'
 app = Flask('kimagochi')
 APP_KEY = os.environ["TWITTER_KEY"]
