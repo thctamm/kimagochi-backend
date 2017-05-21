@@ -2,9 +2,9 @@ import random
 
 GAMESPEED = 1
 
-conf = {'hungerTicks': 3,
-        'boredomTicks': 6,
-        'penaltyTicks': 1,
+conf = {'hungerTicks': 15,
+        'boredomTicks': 30,
+        'penaltyTicks': 15,
         'textTicks' : 2880,
         'paradeCost': 300,
         'paradeBoost': 40,
@@ -68,7 +68,7 @@ class Kim(object):
         self.happiness = 100
         self.boredom = 20
         self.prestige = 51
-        self.cash = 300
+        self.cash = 175
         self.ticks = 0
         self.events = []
         self.textSent = False
