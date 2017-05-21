@@ -51,7 +51,7 @@ events = [{'description': "The Chinese government has given you foregin aid to r
            'happiness': 0,
            'boredom': 0,
            'prestige': 0,
-           'cash': 300},
+           'cash': 0},
            {'description': 'An American college student tried to steal a poster of you. We imprisoned him for this vile act! +20 prestige, -10 boredom',
            'hunger': 0,
            'happiness': 0,
@@ -68,7 +68,7 @@ class Kim(object):
         self.happiness = 100
         self.boredom = 20
         self.prestige = 51
-        self.cash = 0
+        self.cash = 300
         self.ticks = 0
         self.events = []
         self.textSent = False
