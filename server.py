@@ -7,7 +7,7 @@ import random
 import re
 import time
 import requests
-from twilio.rest import TwilioRestClient
+from twilio.rest import Client
 from threading import Thread, Lock, Timer
 from twython import Twython
 from flask import Flask, jsonify
@@ -50,7 +50,7 @@ def updater(gLock, token, lastTweetId):
         twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
         token = twitter.obtain_access_token() 
     twitter = Twython(APP_KEY, access_token=token)
-    twilio = TwilioRestClient(TWILIO_SID, TWILIO_TOKEN)
+    twilio = Client(TWILIO_SID, TWILIO_TOKEN)
     while True:
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
