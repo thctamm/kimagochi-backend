@@ -69,7 +69,7 @@ def updater(gLock, token, lastTweetId):
         for kimId in leaders:
             if posTweet:
                 leaders[kimId].addPositiveTweet()
-            if posTweet:
+            if negTweet:
                 leaders[kimId].addNegativeTweet()
             leaders[kimId].nextTick()
             if leaders[kimId].happiness < 30 and not leaders[kimId].textSent:
