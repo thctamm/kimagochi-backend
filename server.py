@@ -75,8 +75,8 @@ def updater(gLock, token, lastTweetId):
             if leaders[kimId].happiness < 30 and not leaders[kimId].textSent:
                 try:
                     twilio.messages.create(body='Your Kim is becoming quite unhappy. Better check in on him.\n\nID: {}'.format(kimId), to=leaders[kimId].number, from_=TWILIO_NUMBER)
-                finally:
-                    leaders[kimId].textSent = True
+                except TwilioRestException as e:
+                    print(e)
                 leaders[kimId].textSent = True
 
                 
