@@ -53,18 +53,24 @@ def updater(gLock, token, lastTweetId):
     twitter = Twython(APP_KEY, access_token=token)
     twilio = Client(TWILIO_SID, TWILIO_TOKEN)
     while True:
+        posTweet = False
+        negTweet = False
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
             if resp['status']['id'] != lastTweetId:
                 if mentionsKim(resp['status']['text']):
                     sentiment = getSentiment(resp['status']['text'])
                     if sentiment > 0.6:
-                        curKim.addPositiveTweet()
+                        posTweet = True
                     elif sentiment < 0.4:
-                        curKim.addNegativeTweet()
+                        negTweet = True
                 lastTweetId = resp['status']['id']
         gLock.acquire()
         for kimId in leaders:
+            if posTweet:
+                leaders[kimId].addPositiveTweet()
+            if posTweet:
+                leaders[kimId].addNegativeTweet()
             leaders[kimId].nextTick()
             if leaders[kimId].happiness < 30 and not leaders[kimId].textSent:
                 twilio.messages.create(body='Your Kim is becoming quite unhappy. Better check in on him.\n\nID: {}'.format(kimId), to=leaders[kimId].number, from_=TWILIO_NUMBER)
