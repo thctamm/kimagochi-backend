@@ -5,6 +5,7 @@ GAMESPEED = 1
 conf = {'hungerTicks': 3,
         'boredomTicks': 6,
         'penaltyTicks': 1,
+        'textTicks' : 2880,
         'paradeCost': 300,
         'paradeBoost': 40,
         'rocketHappinessBoost': 40,
@@ -60,8 +61,9 @@ events = [{'description': "The Chinese government has given you foregin aid to r
 
 class Kim(object):
     
-    def __init__(self, name):
+    def __init__(self, name, phone):
         self.name = name
+        self.number = phone
         self.hunger =  50
         self.happiness = 100
         self.boredom = 20
@@ -69,6 +71,7 @@ class Kim(object):
         self.cash = 0
         self.ticks = 0
         self.events = []
+        self.textSent = False
 
     def addEvent(self, description):
         self.events.append(description)
@@ -102,6 +105,8 @@ class Kim(object):
             self.hunger += 1
         if self.ticks % conf['boredomTicks'] == 0 and self.boredom < 100:
             self.boredom += 1
+        if self.ticks % conf['textTicks'] == 0:
+            self.textSent = False;
         if self.boredom == 100 and self.ticks % conf['penaltyTicks'] == 0:
             self.happiness -= conf['boredomPenalty']
         if self.hunger == 100 and self.ticks % conf['penaltyTicks'] == 0:
@@ -133,6 +138,7 @@ class Kim(object):
         #fail
         self.boredom -= conf['rocketBoredomSmallBoost']
         self.prestige -= conf['rocketFail']
+        self.happiness -= conf['rocketFail']
         if self.boredom < 0:
             self.boredom = 0
         if self.prestige < 0:
@@ -178,5 +184,4 @@ class Kim(object):
                 'cash': self.cash,
                 'events': self.events}
 
-    
 

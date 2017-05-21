@@ -7,6 +7,7 @@ import random
 import re
 import time
 import requests
+from twilio.rest import TwilioRestClient
 from threading import Thread, Lock, Timer
 from twython import Twython
 from flask import Flask, jsonify
@@ -20,6 +21,9 @@ app = Flask('kimagochi')
 APP_KEY = os.environ["TWITTER_KEY"]
 APP_SECRET = os.environ["TWITTER_SECRET"]
 MS_KEY = os.environ["MS_KEY"]
+TWILIO_SID = os.environ["TWILIO_SID"]
+TWILIO_TOKEN = os.environ["TWILIO_TOKEN"]
+TWILIO_NUMBER = os.environ["TWILIO_NUMBER"]
 random.seed()
 CORS(app)
 lock = Lock()
@@ -46,6 +50,7 @@ def updater(gLock, token, lastTweetId):
         twitter = Twython(APP_KEY, APP_SECRET, oauth_version=2)
         token = twitter.obtain_access_token() 
     twitter = Twython(APP_KEY, access_token=token)
+    twilio = TwilioRestClient(TWILIO_SID, TWILIO_TOKEN)
     while True:
         resp = twitter.show_user(screen_name=twitter_handle)
         if resp != None and resp['status'] != None:
@@ -59,9 +64,11 @@ def updater(gLock, token, lastTweetId):
                 lastTweetId = resp['status']['id']
         gLock.acquire()
         for kimId in leaders:
-            sys.stdout.write('{}'.format(kimId))
             leaders[kimId].nextTick()
-            sys.stdout.write('{}'.format(leaders[kimId].hunger))
+            if leaders[kimId].happiness < 30 and not leaders[kimId].textSent:
+                twilio.messages.create(body='Your Kim is becoming quite unhappy. Better check in on him.\n\nID: {}'.format(kimId), to=leaders[kimId].number, from_=TWILIO_NUMBER)
+                leaders[kimId].textSent = True
+                
         # save data
         dat = {'leaders': leaders,
                'token': token,
@@ -89,13 +96,13 @@ def init():
     app.run(host='0.0.0.0', port = os.environ["PORT"])
 
 
-@app.route('/create')
-def create():
+@app.route('/create/<phone>')
+def create(phone):
     global leaders
     newId = random.randint(0, 999999)
     while newId in leaders:
         newId = random.randint(0, 999999)
-    newKim = Kim(newId)
+    newKim = Kim(newId, phone)
     leaders[newId] = newKim
     return '{}'.format(newId)
 
